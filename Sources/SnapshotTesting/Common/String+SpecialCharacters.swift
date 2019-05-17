@@ -20,6 +20,7 @@ extension String {
   /// \" (double quotation mark) and \' (single quotation mark),
   /// An arbitrary Unicode scalar value, written as \u{n},
   /// where n is a 1–8 digit hexadecimal number (Unicode is discussed in Unicode below)
+  /// The character sequence "#
   ///
   /// - Returns: True if the string has any special character literals, false otherwise.
   func hasEscapedSpecialCharactersLiteral() -> Bool {
@@ -33,6 +34,7 @@ extension String {
       try? NSRegularExpression(pattern: #"\r"#, options: .ignoreMetacharacters),
       try? NSRegularExpression(pattern: #"\""#, options: .ignoreMetacharacters),
       try? NSRegularExpression(pattern: #"\'"#, options: .ignoreMetacharacters),
+      try? NSRegularExpression(pattern: ##""#"##, options: .ignoreMetacharacters),
     ]
     let matches = patterns.compactMap { $0?.firstMatch(in: self, options: .init(), range: NSRange.init(location: 0, length: self.count)) }
     return matches.count > 0

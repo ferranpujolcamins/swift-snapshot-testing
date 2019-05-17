@@ -86,6 +86,9 @@ class StringHasEscapedSpecialCharactersLiteral: XCTestCase {
 
     XCTAssertTrue("\\'".hasEscapedSpecialCharactersLiteral(),
                   "A single quotation mark is a special character")
+
+    XCTAssertTrue("\"#".hasEscapedSpecialCharactersLiteral(),
+                   ##"The character sequence "# is a special character sequence"##)
   }
 
   func testFromRawLiteral() {
@@ -106,6 +109,9 @@ class StringHasEscapedSpecialCharactersLiteral: XCTestCase {
 
     XCTAssertTrue(#"\'"#.hasEscapedSpecialCharactersLiteral(),
                   "A single quotation mark is a special character")
+
+    XCTAssertTrue(##""#"##.hasEscapedSpecialCharactersLiteral(),
+                   ##"The character sequence "# is a special character sequence"##)
   }
   
   func testStringNumberOfNumberSignsNeeded() {
@@ -120,7 +126,7 @@ class StringHasEscapedSpecialCharactersLiteral: XCTestCase {
 
     XCTAssertEqual(####""###"####.numberOfNumberSignsNeeded(), 4,
                    #####"A string with "### must return 4"#####)
-    
+
     XCTAssertEqual(##""#"#"##.numberOfNumberSignsNeeded(), 2,
                    ##"A string with "# must return 2"##)
   }

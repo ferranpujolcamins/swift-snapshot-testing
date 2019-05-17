@@ -139,17 +139,18 @@ final class SnapshotTestingTests: XCTestCase {
     assertSnapshot(matching: user, as: .plist)
   }
 
-  func testStringWithEscapedQuotesAsJson() {
-    let dict = ["key": "value"]
-    let value = [dict.description]
-    if #available(iOS 11.0, macOS 10.13, tvOS 11.0, *) {
-      assertSnapshot(matching: value, as: .json)
-      _assertInlineSnapshot(matching: value, as: .json, with: """
-      [
-        "[\"key\": \"value\"]"
-      ]
-      """)
-    }
+  func testStringWithSpecialCharacters() {
+    let value = #"\""#
+    assertSnapshot(matching: value, as: .lines)
+    _assertInlineSnapshot(matching: value, as: .lines, with: #"""
+    \"
+    """#)
+
+    let value2 = ##""#"##
+    assertSnapshot(matching: value2, as: .lines)
+    _assertInlineSnapshot(matching: value2, as: .lines, with: ##"""
+    "#
+    """##)
   }
 
   func testMixedViews() {

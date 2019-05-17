@@ -217,6 +217,26 @@ internal func writeInlineSnapshot(_ recordings: inout Recordings,
 
   /// Find the end of multi-line literal and replace contents with recording.
   if let multiLineLiteralEndIndex = sourceCodeLines[offsetStartIndex...].firstIndex(where: { $0.contains(multiLineStringLiteralTerminator) }) {
+
+    // Add #'s to the multiline string literal if needed
+    if context.diffable.hasEscapedSpecialCharactersLiteral() {
+      let numberSigns = String(repeating: "#", count: context.diffable.numberOfNumberSignsNeeded())
+      let multiLineStringLiteralTerminatorPre = numberSigns + multiLineStringLiteralTerminator
+      let multiLineStringLiteralTerminatorPost = multiLineStringLiteralTerminator + numberSigns
+
+      // Replace opening """
+      sourceCodeLines[functionLineIndex].replaceFirstOccurrence(
+        of: multiLineStringLiteralTerminator,
+        with: multiLineStringLiteralTerminatorPre
+      )
+
+      // Replace closing """
+      sourceCodeLines[multiLineLiteralEndIndex].replaceFirstOccurrence(
+        of: multiLineStringLiteralTerminator,
+        with: multiLineStringLiteralTerminatorPost
+      )
+    }
+
     /// Convert actual value to Lines to insert
     let indentText = indentation(of: sourceCodeLines[multiLineLiteralEndIndex])
     let newDiffableLines = context.diffable
@@ -248,6 +268,14 @@ private func indentation<S: StringProtocol>(of str: S) -> String {
     count += 1
   }
   return String(repeating: " ", count: count)
+}
+
+private extension Substring {
+  mutating func replaceFirstOccurrence(of matchedString: String, with newString: String) {
+    if let matchedRange = range(of: matchedString) {
+      self.replaceSubrange(matchedRange, with: newString)
+    }
+  }
 }
 
 private let emptyStringLiteralWithCloseBrace = "\"\")"
