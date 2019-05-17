@@ -37,4 +37,23 @@ extension String {
     let matches = patterns.compactMap { $0?.firstMatch(in: self, options: .init(), range: NSRange.init(location: 0, length: self.count)) }
     return matches.count > 0
   }
+
+
+  /// This method calculates how many number signs (#) we need to add around a string
+  /// literal to properly escape its content.
+  ///
+  /// Multiple # are needed when the literal contains "#, "##, "### ...
+  ///
+  /// - Returns: The number of "number signs(#)" needed around a string literal.
+  ///            When there is no "#, ... return 1
+  func numberOfNumberSignsNeeded() -> Int {
+    let pattern = try! NSRegularExpression(pattern: ##""#{1,}"##, options: .init())
+
+    let matches = pattern.matches(in: self, options: .init(), range: NSRange.init(location: 0, length: self.count))
+
+    // If we have "## then the length of the match is 3,
+    // which is also the number of "number signs (#)" we need to add
+    // before and after the string literal
+    return matches.map { $0.range.length }.max() ?? 1
+  }
 }

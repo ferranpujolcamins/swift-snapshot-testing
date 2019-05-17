@@ -8,7 +8,7 @@
 import XCTest
 @testable import SnapshotTesting
 
-class String_SpecialCharactersTests: XCTestCase {
+class StringHasEscapedSpecialCharactersLiteral: XCTestCase {
 
   func testUnicodeLiterals() {
     XCTAssertTrue(#"\u{0}"#.hasEscapedSpecialCharactersLiteral(),
@@ -47,22 +47,22 @@ class String_SpecialCharactersTests: XCTestCase {
                    "An empty string has no special characters")
 
     XCTAssertFalse("\0".hasEscapedSpecialCharactersLiteral(),
-                  "An unescape literal must not be matched")
+                   "An unescape literal must not be matched")
 
     XCTAssertFalse("\\".hasEscapedSpecialCharactersLiteral(),
-                  "An unescape literal must not be matched")
+                   "An unescape literal must not be matched")
 
     XCTAssertFalse("\n".hasEscapedSpecialCharactersLiteral(),
-                  "An unescape literal must not be matched")
+                   "An unescape literal must not be matched")
 
     XCTAssertFalse("\r".hasEscapedSpecialCharactersLiteral(),
-                  "An unescape literal must not be matched")
+                   "An unescape literal must not be matched")
 
     XCTAssertFalse("\"".hasEscapedSpecialCharactersLiteral(),
-                  "An unescape literal must not be matched")
+                   "An unescape literal must not be matched")
 
     XCTAssertFalse("\'".hasEscapedSpecialCharactersLiteral(),
-                  "An unescape literal must not be matched")
+                   "An unescape literal must not be matched")
 
     XCTAssertFalse("\u{0}".hasEscapedSpecialCharactersLiteral(),
                    "An unescape unicode literal must not be matched")
@@ -106,5 +106,22 @@ class String_SpecialCharactersTests: XCTestCase {
 
     XCTAssertTrue(#"\'"#.hasEscapedSpecialCharactersLiteral(),
                   "A single quotation mark is a special character")
+  }
+  
+  func testStringNumberOfNumberSignsNeeded() {
+    XCTAssertEqual("".numberOfNumberSignsNeeded(), 1,
+                   ##"A string with no "# ... must return 1"##)
+
+    XCTAssertEqual(##""#"##.numberOfNumberSignsNeeded(), 2,
+                   ##"A string with "# must return 2"##)
+
+    XCTAssertEqual(###""##"###.numberOfNumberSignsNeeded(), 3,
+                   ####"A string with "## must return 3"####)
+
+    XCTAssertEqual(####""###"####.numberOfNumberSignsNeeded(), 4,
+                   #####"A string with "### must return 4"#####)
+    
+    XCTAssertEqual(##""#"#"##.numberOfNumberSignsNeeded(), 2,
+                   ##"A string with "# must return 2"##)
   }
 }
