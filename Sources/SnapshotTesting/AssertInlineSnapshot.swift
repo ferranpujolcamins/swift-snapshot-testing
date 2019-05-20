@@ -218,25 +218,6 @@ internal func writeInlineSnapshot(_ recordings: inout Recordings,
   /// Find the end of multi-line literal and replace contents with recording.
   if let multiLineLiteralEndIndex = sourceCodeLines[offsetStartIndex...].firstIndex(where: { $0.contains(multiLineStringLiteralTerminator) }) {
 
-    // Add #'s to the multiline string literal if needed
-    if context.diffable.hasEscapedSpecialCharactersLiteral() {
-      let numberSigns = String(repeating: "#", count: context.diffable.numberOfNumberSignsNeeded())
-      let multiLineStringLiteralTerminatorPre = numberSigns + multiLineStringLiteralTerminator
-      let multiLineStringLiteralTerminatorPost = multiLineStringLiteralTerminator + numberSigns
-
-      // Replace opening """
-      sourceCodeLines[functionLineIndex].replaceFirstOccurrence(
-        of: multiLineStringLiteralTerminator,
-        with: multiLineStringLiteralTerminatorPre
-      )
-
-      // Replace closing """
-      sourceCodeLines[multiLineLiteralEndIndex].replaceFirstOccurrence(
-        of: multiLineStringLiteralTerminator,
-        with: multiLineStringLiteralTerminatorPost
-      )
-    }
-
     /// Convert actual value to Lines to insert
     let indentText = indentation(of: sourceCodeLines[multiLineLiteralEndIndex])
     let newDiffableLines = context.diffable
@@ -248,6 +229,28 @@ internal func writeInlineSnapshot(_ recordings: inout Recordings,
 
     /// Insert the lines
     sourceCodeLines.replaceSubrange(offsetStartIndex..<multiLineLiteralEndIndex, with: newDiffableLines)
+
+    // Add #'s to the multiline string literal if needed
+    let numberSigns: String
+    if context.diffable.hasEscapedSpecialCharactersLiteral() {
+      numberSigns = String(repeating: "#", count: context.diffable.numberOfNumberSignsNeeded())
+    } else {
+      numberSigns = ""
+    }
+    let multiLineStringLiteralTerminatorPre = numberSigns + multiLineStringLiteralTerminator
+    let multiLineStringLiteralTerminatorPost = multiLineStringLiteralTerminator + numberSigns
+
+    // Update opening (#...)"""
+    sourceCodeLines[functionLineIndex].replaceFirstOccurrence(
+      of: extendedOpeningStringDelimitersPattern,
+      with: multiLineStringLiteralTerminatorPre
+    )
+
+    // Update closing """(#...)
+    sourceCodeLines[multiLineLiteralEndIndex].replaceFirstOccurrence(
+      of: extendedClosingStringDelimitersPattern,
+      with: multiLineStringLiteralTerminatorPost
+    )
 
     recordings[context.fileName, default: []].append(fileRecording)
     return context.setSourceCode(sourceCodeLines.joined(separator: "\n"))
@@ -271,15 +274,16 @@ private func indentation<S: StringProtocol>(of str: S) -> String {
 }
 
 private extension Substring {
-  mutating func replaceFirstOccurrence(of matchedString: String, with newString: String) {
-    if let matchedRange = range(of: matchedString) {
-      self.replaceSubrange(matchedRange, with: newString)
-    }
+  mutating func replaceFirstOccurrence(of pattern: String, with newString: String) {
+    let newString = replacingOccurrences(of: pattern, with: newString, options: .regularExpression)
+    self = Substring(newString)
   }
 }
 
 private let emptyStringLiteralWithCloseBrace = "\"\")"
 private let multiLineStringLiteralTerminator = "\"\"\""
+private let extendedOpeningStringDelimitersPattern = #"#{0,}\"\"\""#
+private let extendedClosingStringDelimitersPattern = ##"\"\"\"#{0,}"##
 
 // When we modify a file, the line numbers reported by the compiler through #line are no longer
 // accurate. With the FileRecording values we keep track of we modify the files so we can adjust
