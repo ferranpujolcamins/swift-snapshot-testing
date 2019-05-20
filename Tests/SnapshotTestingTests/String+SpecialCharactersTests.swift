@@ -1,10 +1,3 @@
-//
-//  String+SpecialCharactersTests.swift
-//  SnapshotTesting
-//
-//  Created by Ferran Pujol Camins on 17/05/2019.
-//
-
 import XCTest
 @testable import SnapshotTesting
 

@@ -1,10 +1,3 @@
-//
-//  String+SpecialCharacters.swift
-//  SnapshotTestingTests_iOS
-//
-//  Created by Ferran Pujol Camins on 17/05/2019.
-//
-
 import Foundation
 
 extension String {
