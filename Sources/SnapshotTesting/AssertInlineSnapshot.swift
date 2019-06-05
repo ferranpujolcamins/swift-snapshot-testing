@@ -216,19 +216,7 @@ internal func writeInlineSnapshot(_ recordings: inout Recordings,
   }
 
   /// Find the end of multi-line literal and replace contents with recording.
-  if let multiLineLiteralEndIndex = sourceCodeLines[offsetStartIndex...].firstIndex(where: { $0.contains(multiLineStringLiteralTerminator) }) {
-
-    /// Convert actual value to Lines to insert
-    let indentText = indentation(of: sourceCodeLines[multiLineLiteralEndIndex])
-    let newDiffableLines = context.diffable
-      .split(separator: "\n", omittingEmptySubsequences: false)
-      .map { Substring(indentText + $0) }
-    lineCountDifference += newDiffableLines.count - (multiLineLiteralEndIndex - offsetStartIndex)
-
-    let fileRecording = FileRecording(line: context.lineIndex, difference: lineCountDifference)
-
-    /// Insert the lines
-    sourceCodeLines.replaceSubrange(offsetStartIndex..<multiLineLiteralEndIndex, with: newDiffableLines)
+  if let multiLineLiteralEndIndex = sourceCodeLines[offsetStartIndex...].firstIndex(where: { $0.hasClosingMultilineStringDelimiter() }) {
 
     // Add #'s to the multiline string literal if needed
     let numberSigns: String
@@ -252,6 +240,18 @@ internal func writeInlineSnapshot(_ recordings: inout Recordings,
       with: multiLineStringLiteralTerminatorPost
     )
 
+    /// Convert actual value to Lines to insert
+    let indentText = indentation(of: sourceCodeLines[multiLineLiteralEndIndex])
+    let newDiffableLines = context.diffable
+      .split(separator: "\n", omittingEmptySubsequences: false)
+      .map { Substring(indentText + $0) }
+    lineCountDifference += newDiffableLines.count - (multiLineLiteralEndIndex - offsetStartIndex)
+
+    let fileRecording = FileRecording(line: context.lineIndex, difference: lineCountDifference)
+
+    /// Insert the lines
+    sourceCodeLines.replaceSubrange(offsetStartIndex..<multiLineLiteralEndIndex, with: newDiffableLines)
+
     recordings[context.fileName, default: []].append(fileRecording)
     return context.setSourceCode(sourceCodeLines.joined(separator: "\n"))
   }
@@ -273,10 +273,18 @@ private func indentation<S: StringProtocol>(of str: S) -> String {
   return String(repeating: " ", count: count)
 }
 
-private extension Substring {
+fileprivate extension Substring {
   mutating func replaceFirstOccurrence(of pattern: String, with newString: String) {
     let newString = replacingOccurrences(of: pattern, with: newString, options: .regularExpression)
     self = Substring(newString)
+  }
+
+  func hasOpeningMultilineStringDelimiter() -> Bool {
+    return range(of: extendedOpeningStringDelimitersPattern, options: .regularExpression) != nil
+  }
+
+  func hasClosingMultilineStringDelimiter() -> Bool {
+    return range(of: extendedClosingStringDelimitersPattern, options: .regularExpression) != nil
   }
 }
 

@@ -1,7 +1,8 @@
+import XCTest
 @testable import SnapshotTesting
-extension TestCase {
+extension InlineSnapshotsValidityTests {
   func testCreateSnapshotWithLongerExtendedDelimiter1() {
-    _assertInlineSnapshot(matching: "value", as: .lines, with: #"""
+    _assertInlineSnapshot(matching: #"\""#, as: .lines, with: #"""
     \"
     """#)
   }

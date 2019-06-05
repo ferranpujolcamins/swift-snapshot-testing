@@ -1,7 +1,8 @@
+import XCTest
 @testable import SnapshotTesting
-extension TestCase {
+extension InlineSnapshotsValidityTests {
   func testCreateSnapshotMultiLine() {
-    _assertInlineSnapshot(matching: "value", as: .lines, with: """
+    _assertInlineSnapshot(matching: "NEW_SNAPSHOT", as: .lines, with: """
     NEW_SNAPSHOT
     """)
   }
