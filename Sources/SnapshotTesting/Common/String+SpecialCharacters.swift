@@ -17,6 +17,9 @@ extension String {
   ///
   /// - Returns: True if the string has any special character literals, false otherwise.
   func hasEscapedSpecialCharactersLiteral() -> Bool {
+    let multilineLiteralAndNumberSign = ##"""
+    """#
+    """##
     let patterns = [
       // Matches \u{n} where n is a 1–8 digit hexadecimal number
       try? NSRegularExpression(pattern: #"\\u\{[a-fA-f0-9]{1,8}\}"#, options: .init()),
@@ -27,7 +30,7 @@ extension String {
       try? NSRegularExpression(pattern: #"\r"#, options: .ignoreMetacharacters),
       try? NSRegularExpression(pattern: #"\""#, options: .ignoreMetacharacters),
       try? NSRegularExpression(pattern: #"\'"#, options: .ignoreMetacharacters),
-      //try? NSRegularExpression(pattern: ##""#"##, options: .ignoreMetacharacters),
+      try? NSRegularExpression(pattern: multilineLiteralAndNumberSign, options: .ignoreMetacharacters),
     ]
     let matches = patterns.compactMap { $0?.firstMatch(in: self, options: .init(), range: NSRange.init(location: 0, length: self.count)) }
     return matches.count > 0

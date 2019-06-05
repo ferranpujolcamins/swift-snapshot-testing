@@ -51,39 +51,40 @@ class InlineSnapshotTests: XCTestCase {
     assertSnapshot(source: newSource, diffable: diffable)
   }
 
-//  func testUpdateSnapshotWithMoreLines() {
-//    let diffable = "NEW_SNAPSHOT\nNEW_SNAPSHOT"
-//    let source = #"""
-//    _assertInlineSnapshot(matching: diffable, as: .lines, with: """
-//    OLD_SNAPSHOT
-//    """)
-//    """#
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testUpdateSnapshotWithMoreLines() {
+    let diffable = "NEW_SNAPSHOT\nNEW_SNAPSHOT"
+    let source = #"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: """
+    OLD_SNAPSHOT
+    """)
+    """#
 
-//  func testUpdateSnapshotWithLessLines() {
-//    let source = #"""
-//    _assertInlineSnapshot(matching: post, as: .lines), with: """
-//    OLD_SNAPSHOT
-//    OLD_SNAPSHOT
-//    """)
-//    """#
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: "NEW_SNAPSHOT", fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
+
+  func testUpdateSnapshotWithLessLines() {
+    let diffable = "NEW_SNAPSHOT"
+    let source = #"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: """
+    OLD_SNAPSHOT
+    OLD_SNAPSHOT
+    """)
+    """#
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 
   func testCreateSnapshotWithExtendedDelimiterSingleLine1() {
     let diffable = #"\""#
@@ -118,20 +119,20 @@ class InlineSnapshotTests: XCTestCase {
     assertSnapshot(source: newSource, diffable: diffable)
   }
 
-//  func testCreateSnapshotWithExtendedDelimiterSingleLine2() {
-//    let diffable = ##"\"""#"##
-//    let source = ##"""
-//    _assertInlineSnapshot(matching: #diffable#, as: .lines, with: "")
-//    """##
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testCreateSnapshotWithExtendedDelimiterSingleLine2() {
+    let diffable = ##"\"""#"##
+    let source = ##"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: "")
+    """##
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 
   func testCreateSnapshotWithExtendedDelimiter1() {
     let diffable = #"\""#
@@ -149,21 +150,21 @@ class InlineSnapshotTests: XCTestCase {
     assertSnapshot(source: newSource, diffable: diffable)
   }
 
-//  func testCreateSnapshotWithExtendedDelimiter2() {
-//    let diffable = ##"\"""#"##
-//    let source = ###"""
-//    _assertInlineSnapshot(matching: ##"\###(diffable)"##, as: .lines, with: ##"""
-//    """##)
-//    """###
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testCreateSnapshotWithExtendedDelimiter2() {
+    let diffable = ##"\"""#"##
+    let source = ###"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: ##"""
+    """##)
+    """###
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 
   func testCreateSnapshotWithLongerExtendedDelimiter1() {
     let diffable =  #"\""#
@@ -181,21 +182,21 @@ class InlineSnapshotTests: XCTestCase {
     assertSnapshot(source: newSource, diffable: diffable)
   }
 
-//  func testCreateSnapshotWithLongerExtendedDelimiter2() {
-//    let diffable = ##"\"""#"##
-//    let source = ####"""
-//    _assertInlineSnapshot(matching: ##"\####(diffable)"##, as: .lines, with: ###"""
-//    """###)
-//    """####
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testCreateSnapshotWithLongerExtendedDelimiter2() {
+    let diffable = ##"\"""#"##
+    let source = ####"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: ###"""
+    """###)
+    """####
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 
   func testCreateSnapshotWithShorterExtendedDelimiter1() {
     let diffable = #"\""#
@@ -213,21 +214,21 @@ class InlineSnapshotTests: XCTestCase {
     assertSnapshot(source: newSource, diffable: diffable)
   }
 
-//  func testCreateSnapshotWithShorterExtendedDelimiter2() {
-//    let diffable = ##"\"""#"##
-//    let source = ##"""
-//    _assertInlineSnapshot(matching: #diffable#, as: .lines, with: #"""
-//    """#)
-//    """##
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testCreateSnapshotWithShorterExtendedDelimiter2() {
+    let diffable = ##"\"""#"##
+    let source = ##"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: #"""
+    """#)
+    """##
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 
   func testUpdateSnapshotWithExtendedDelimiter1() {
     let diffable = #"\""#
@@ -246,22 +247,22 @@ class InlineSnapshotTests: XCTestCase {
     assertSnapshot(source: newSource, diffable: diffable)
   }
 
-//  func testUpdateSnapshotWithExtendedDelimiter2() {
-//    let diffable = ##"\"\"\"#"##
-//    let source = ###"""
-//    _assertInlineSnapshot(matching: ##"\###(diffable)"##, as: .lines, with: ##"""
-//    "#
-//    """##)
-//    """###
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testUpdateSnapshotWithExtendedDelimiter2() {
+    let diffable = ##"\"""#"##
+    let source = ###"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: ##"""
+    "#
+    """##)
+    """###
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 
   func testUpdateSnapshotWithLongerExtendedDelimiter1() {
     let diffable = #"\""#
@@ -280,22 +281,22 @@ class InlineSnapshotTests: XCTestCase {
     assertSnapshot(source: newSource, diffable: diffable)
   }
 
-//  func testUpdateSnapshotWithLongerExtendedDelimiter2() {
-//    let diffable = ##"\"""#"##
-//    let source = ##"""
-//    _assertInlineSnapshot(matching: #diffable#, as: .lines, with: #"""
-//    "#
-//    """#)
-//    """##
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testUpdateSnapshotWithLongerExtendedDelimiter2() {
+    let diffable = ##"\"""#"##
+    let source = ##"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: #"""
+    "#
+    """#)
+    """##
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 
   func testUpdateSnapshotWithShorterExtendedDelimiter1() {
     let diffable = #"\""#
@@ -314,22 +315,22 @@ class InlineSnapshotTests: XCTestCase {
     assertSnapshot(source: newSource, diffable: diffable)
   }
 
-//  func testUpdateSnapshotWithShorterExtendedDelimiter2() {
-//    let diffable = ##"\"""#"##
-//    let source = ####"""
-//    _assertInlineSnapshot(matching: ##"\####(diffable)"##, as: .lines, with: ###"""
-//    "#
-//    """###)
-//    """####
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testUpdateSnapshotWithShorterExtendedDelimiter2() {
+    let diffable = ##"\"""#"##
+    let source = ####"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: ###"""
+    "#
+    """###)
+    """####
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 
   // TODO: add more tests lie this with different amount of lines
 //  func testUpdateSeveralSnapshots() {
@@ -353,27 +354,27 @@ class InlineSnapshotTests: XCTestCase {
 //    assertSnapshot(source: newSource, diffable: diffable)
 //  }
 
-//  func testUpdateSnapshotCombined1() {
-//    let diffable = ##"""
-//    ▿ User
-//      - bio: "Blobbed around the world."
-//      - id: 1
-//      - name: "Bl#\"\"#obby"
-//    """##
-//
-//    let source = ######"""
-//    _assertInlineSnapshot(matching: ##"\######(diffable)"##, as: .lines, with: #####"""
-//    """#####)
-//    """######
-//
-//    var recordings: Recordings = [:]
-//    let newSource = writeInlineSnapshot(
-//      &recordings,
-//      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
-//      ).sourceCode
-//
-//    assertSnapshot(source: newSource, diffable: diffable)
-//  }
+  func testUpdateSnapshotCombined1() {
+    let diffable = ##"""
+    ▿ User
+      - bio: "Blobbed around the world."
+      - id: 1
+      - name: "Bl#\"\"#obby"
+    """##
+
+    let source = ######"""
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: #####"""
+    """#####)
+    """######
+
+    var recordings: Recordings = [:]
+    let newSource = writeInlineSnapshot(
+      &recordings,
+      Context(sourceCode: source, diffable: diffable, fileName: "filename", lineIndex: 1)
+      ).sourceCode
+
+    assertSnapshot(source: newSource, diffable: diffable)
+  }
 }
 
 func assertSnapshot(source: String, diffable: String, record: Bool = false, file: StaticString = #file, testName: String = #function, line: UInt = #line) {
