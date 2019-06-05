@@ -27,7 +27,7 @@ extension String {
       try? NSRegularExpression(pattern: #"\r"#, options: .ignoreMetacharacters),
       try? NSRegularExpression(pattern: #"\""#, options: .ignoreMetacharacters),
       try? NSRegularExpression(pattern: #"\'"#, options: .ignoreMetacharacters),
-      try? NSRegularExpression(pattern: ##""#"##, options: .ignoreMetacharacters),
+      //try? NSRegularExpression(pattern: ##""#"##, options: .ignoreMetacharacters),
     ]
     let matches = patterns.compactMap { $0?.firstMatch(in: self, options: .init(), range: NSRange.init(location: 0, length: self.count)) }
     return matches.count > 0

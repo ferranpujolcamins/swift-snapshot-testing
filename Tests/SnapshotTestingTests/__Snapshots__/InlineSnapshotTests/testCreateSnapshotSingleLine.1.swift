@@ -2,7 +2,11 @@ import XCTest
 @testable import SnapshotTesting
 extension InlineSnapshotsValidityTests {
   func testCreateSnapshotSingleLine() {
-    _assertInlineSnapshot(matching: "NEW_SNAPSHOT", as: .lines, with: """
+    let diffable = #######"""
+    NEW_SNAPSHOT
+    """#######
+
+    _assertInlineSnapshot(matching: diffable, as: .lines, with: """
     NEW_SNAPSHOT
     """)
   }

@@ -218,10 +218,15 @@ internal func writeInlineSnapshot(_ recordings: inout Recordings,
   /// Find the end of multi-line literal and replace contents with recording.
   if let multiLineLiteralEndIndex = sourceCodeLines[offsetStartIndex...].firstIndex(where: { $0.hasClosingMultilineStringDelimiter() }) {
 
+    let diffableLines = context.diffable.split(separator: "\n")
+
     // Add #'s to the multiline string literal if needed
     let numberSigns: String
     if context.diffable.hasEscapedSpecialCharactersLiteral() {
       numberSigns = String(repeating: "#", count: context.diffable.numberOfNumberSignsNeeded())
+    } else if nil != diffableLines.first(where: { $0.endsInBackslash() }) {
+      // We want to avoid \ being interpreted as an escaped newline in the recorded inline snapshot
+      numberSigns = "#"
     } else {
       numberSigns = ""
     }
@@ -285,6 +290,13 @@ fileprivate extension Substring {
 
   func hasClosingMultilineStringDelimiter() -> Bool {
     return range(of: extendedClosingStringDelimitersPattern, options: .regularExpression) != nil
+  }
+
+  func endsInBackslash() -> Bool {
+    if let lastChar = last {
+      return lastChar == Character(#"\"#)
+    }
+    return false
   }
 }
 
